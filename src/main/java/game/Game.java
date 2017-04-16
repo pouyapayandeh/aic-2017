@@ -13,13 +13,13 @@ public class Game
 
     List<Team> teams;
     List<Bullet> bullets;
-    List<Obstacle> Obstacles;
+    List<Obstacle> obstacles;
     int time;
     public Game()
     {
         teams = new ArrayList<>();
         bullets = new ArrayList<>();
-        Obstacles = new ArrayList<>();
+        obstacles = new ArrayList<>();
     }
 
     public void setupGame()
@@ -28,6 +28,7 @@ public class Game
         Team B = new Team("Team B" );
         A.newAgent(new Vector2D(10,10));
         B.newAgent(new Vector2D(100,100));
+        obstacles.add(new Obstacle(50,50,10));
         teams.add(A);
         teams.add(B);
     }

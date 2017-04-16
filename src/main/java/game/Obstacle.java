@@ -8,4 +8,10 @@ public class Obstacle
     int x,y;
     int r;
 
+    public Obstacle(int x, int y, int r)
+    {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+    }
 }
