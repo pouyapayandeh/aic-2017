@@ -1,0 +1,21 @@
+group 'aic'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url "http://clojars.org/repo" }
+}
+
+dependencies {
+//    compile "org.glassfish.tyrus:tyrus-server:1.13.1"
+//    compile "org.glassfish.tyrus:tyrus-container-grizzly-server:1.13.1"
+    compile "org.java-websocket:java-websocket:1.3.2"
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.6'
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.6'
+    compile "com.google.code.gson:gson:2.8.0"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
