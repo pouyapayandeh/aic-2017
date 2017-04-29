@@ -45,10 +45,14 @@ function onMessage(evt)
     }
     for(var i = 0 ; i < game['obstacles'].length ; i++)
     {
-        obstacle = game['obstacles'][i];
+        var obstacle = game['obstacles'][i];
         drawObstacle(ctx,obstacle);
     }
-
+    for(var i = 0 ; i < game['bullets'].length ; i++)
+    {
+        var bullet = game['bullets'][i];
+        drawBullet(ctx,bullet);
+    }
 }
 function drawObstacle(ctx, obstacle) {
     ctx.beginPath();
@@ -56,6 +60,14 @@ function drawObstacle(ctx, obstacle) {
     ctx.fillStyle ="grey";
     ctx.fill();
     ctx.stroke();
+}
+function drawBullet(ctx, bullet) {
+    ctx.beginPath();
+    ctx.arc(bullet.pos.x,bullet.pos.y,1,0,2*Math.PI);
+    ctx.fillStyle ="red";
+    ctx.fill();
+    ctx.stroke();
+
 }
 function drawAgent(ctx,agent,color) {
     var r = 10;

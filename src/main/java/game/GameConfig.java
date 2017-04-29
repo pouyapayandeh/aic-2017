@@ -10,4 +10,14 @@ public interface GameConfig
     int getBaseHealth();
 
     int getTimeStep();
+
+    double getBulletVelocity();
+
+    int getAgentSize();
+
+    int getBulletSize();
+
+    int getMapWidth();
+
+    int getMapHeight();
 }

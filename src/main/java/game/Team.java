@@ -13,11 +13,14 @@ public class Team
     ArrayList<Agent> agents;
     int score;
 
-    public Team(String name )
+    transient  Game game;
+
+    public Team(String name ,Game game)
     {
         this.id = gid++;
         this.name = name;
         score =  0;
+        this.game =game;
         agents = new ArrayList<>();
     }
     public void newAgent(Vector2D pos)
@@ -25,6 +28,22 @@ public class Team
         Agent agent = new Agent(pos);
         agent.setTeam(this);
         agents.add(agent);
+        game.world.addBody(agent.circle);
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ArrayList<Agent> getAgents() {
+        return agents;
+    }
+
+    public int getScore() {
+        return score;
+    }
 }
