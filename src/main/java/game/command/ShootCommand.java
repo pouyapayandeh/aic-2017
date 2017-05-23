@@ -26,7 +26,6 @@ public class ShootCommand implements  Command
             Bullet b =new Bullet(new Vector2D(ag.getPos().getX()+x,
                     ag.getPos().getY()+y), ag.getOrientation());
             game.getBullets().add(b);
-            game.getWorld().addBody(b.getCircle());
         }
     }
 }

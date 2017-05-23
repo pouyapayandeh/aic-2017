@@ -14,23 +14,26 @@ public class Obstacle
     double x,y;
     double r;
 
-    transient Body circle;
-
+  //  transient Body circle;
+    public Vector2D getPos()
+    {
+        return  new Vector2D(x,y);
+    }
     public Obstacle(double x, double y, double r)
     {
         this.x = x;
         this.y = y;
         this.r = r;
 
-        circle = new Body();
-        circle.addFixture(Geometry.createCircle(r));
-        circle.setMass(MassType.NORMAL);
-        circle.translate(x, y);
+//        circle = new Body();
+//        circle.addFixture(Geometry.createCircle(r));
+//        circle.setMass(MassType.NORMAL);
+//        circle.translate(x, y);
     }
     public void sync()
     {
-        x=circle.getWorldCenter().x;
-        y = circle.getWorldCenter().y;
+//        x=circle.getWorldCenter().x;
+//        y = circle.getWorldCenter().y;
 //        pos = new Vector2D(,);
     }
 }

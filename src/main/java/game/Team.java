@@ -28,7 +28,6 @@ public class Team
         Agent agent = new Agent(pos);
         agent.setTeam(this);
         agents.add(agent);
-        game.world.addBody(agent.circle);
     }
 
     public int getId() {

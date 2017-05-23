@@ -1,11 +1,6 @@
 package game;
 
 import game.command.Command;
-import org.dyn4j.collision.narrowphase.Penetration;
-import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.BodyFixture;
-import org.dyn4j.dynamics.CollisionAdapter;
-import org.dyn4j.dynamics.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,142 +9,126 @@ import java.util.Optional;
 /**
  * Created by Pouya Payandeh on 4/16/2017.
  */
-public class Game extends CollisionAdapter
-{
+public class Game {
 
     List<Team> teams;
     List<Bullet> bullets;
     List<Obstacle> obstacles;
     int time;
-    int width,height;
-
-    @Override
-    public boolean collision(Body body1, BodyFixture fixture1, Body body2, BodyFixture fixture2, Penetration penetration) {
+    int width, height;
 
 
-
-        Object o1  = getObject(body1);
-        Object o2  = getObject(body2);
-
-
-        if(o1 instanceof Bullet) {
-            body1.getLinearVelocity().zero();
-            body1.setAngularVelocity(0.0);
-            world.removeBody(body1);
-            bullets.remove(o1);
-
-        }
-
-        if(o2 instanceof Bullet) {
-            body2.getLinearVelocity().zero();
-            body2.setAngularVelocity(0.0);
-            world.removeBody(body2);
-            bullets.remove(o2);
-        }
-
-        if(o1 instanceof Obstacle && o2 instanceof Agent)
-        {
-
-            body2.getLinearVelocity().zero();
-            body2.setAngularVelocity(0.0);
-            body2.setActive(false);
-        }
-        if(o2 instanceof Obstacle && o1 instanceof Agent)
-        {
-
-            body1.getLinearVelocity().zero();
-            body1.setAngularVelocity(0.0);
-            body1.setActive(false);
-        }
-        return false;
-    }
-
-    private Object getObject(Body body1) {
-
-        Optional<Agent> opt = teams.stream().flatMap(team -> team.agents.stream()).
-                filter(agent -> agent.circle == body1).findFirst();
-        if(opt.isPresent())
-            return opt.get();
-
-        Optional<Bullet> opt2 = bullets.stream().filter(bullet -> bullet.circle == body1).findFirst();
-            if(opt2.isPresent())
-                return opt2.get();
-        Optional<Obstacle> opt3 = obstacles.stream().filter(obstacle -> obstacle.circle == body1).findFirst();
-        return opt3.orElse(null);
-    }
-
-    transient World world = new World();
-
-    public Game()
-    {
+    public Game() {
         teams = new ArrayList<>();
         bullets = new ArrayList<>();
         obstacles = new ArrayList<>();
-        this.world.setGravity(World.ZERO_GRAVITY);
-        this.world.addListener(this);
     }
 
-    public void setupGame()
-    {
-        width =ConfigManager.i().getMapWidth();
+    public void setupGame() {
+        width = ConfigManager.i().getMapWidth();
         height = ConfigManager.i().getMapHeight();
-        Team A = new Team("Team A" ,this);
-        Team B = new Team("Team B" ,this);
-        A.newAgent(new Vector2D(10,10));
-        B.newAgent(new Vector2D(100,100));
+        Team A = new Team("Team A", this);
+        Team B = new Team("Team B", this);
+        A.newAgent(new Vector2D(10, 10));
+        B.newAgent(new Vector2D(100, 100));
         Obstacle obstacle = new Obstacle(300, 300, 50);
-        this.world.addBody(obstacle.circle);
         obstacles.add(obstacle);
         teams.add(A);
         teams.add(B);
     }
 
-    public void doTurn(List<Command> commands)
-    {
-        //moveBullets();
+    public void doTurn(List<Command> commands) {
+        moveBullets();
 
-        sync();
+//        sync();
         removeBullets();
         commands.forEach(command -> command.apply(this));
-        world.updatev(1);
-        time +=ConfigManager.i().getTimeStep();
+//        world.updatev(1);
+        time += ConfigManager.i().getTimeStep();
     }
 
     private void removeBullets() {
-        bullets.stream().filter(bullet -> isNotInMap(bullet.pos)).forEach(bullet -> world.removeBody(bullet.circle));
         bullets.removeIf(bullet -> isNotInMap(bullet.pos));
-    }
-
-    private void sync() {
-        teams.stream().flatMap(team -> team.agents.stream()).forEach(agent -> agent.sync());
-        bullets.forEach(bullet -> bullet.sync());
-        obstacles.forEach(obstacle -> obstacle.sync());
     }
 
     private void moveBullets() {
 
 //
-        for (Bullet bullet:bullets) {
-            double dx =  (ConfigManager.i().getBulletVelocity()*Math.cos(bullet.getOrientation()));
-            double dy = (ConfigManager.i().getBulletVelocity()*Math.sin(bullet.getOrientation()));
-            bullet.getPos().add(new Vector2D(dx,dy));
+        for (Bullet bullet : bullets) {
+            double dx = (ConfigManager.i().getBulletVelocity() * Math.cos(bullet.getOrientation()));
+            double dy = (ConfigManager.i().getBulletVelocity() * Math.sin(bullet.getOrientation()));
+            bullet.getPos().add(new Vector2D(dx, dy));
         }
     }
 
+    public Vector2D MotionEquation(Vector2D u, Vector2D v, double t) {
+        if (t >= 0 && t <= 1) {
+            return new Vector2D((1-t)*u.getX()+(t)*v.getX(),(1-t)*u.getY()+(t)*v.getY());
+
+        }
+        return null;
+    }
+
+    public double CollisionDetect(Vector2D u1, Vector2D u2, Vector2D v1, Vector2D v2, double r1, double r2) {
+        double R = r1 + r2;
+        double R2 = R * R;
+        Vector2D v = Vector2D.sub(v2, v1);
+        Vector2D u = Vector2D.sub(u2, u1);
+        double uu = u.cross(u);
+        double vv = v.cross(v);
+        double uv = v.cross(u);
+
+        double a = uu - 2 * uv + vv;
+        double b = -2 * uu + 2 * uv;
+        double c = uu - R2;
+
+        double delta = b * b - 4 * a * c;
+
+        if (delta >= 0) {
+            double x1 = (-b + Math.sqrt(delta)) / (2 * a);
+            double x2 = (-b - Math.sqrt(delta)) / (2 * a);
+            if (x1 >= 0 && x1 <= 1 && x2 >= 0 && x2 <= 1 && x1 < x2) {
+                return x1;//MotionEquation(u1,v1,x1);
+            }
+            if (x1 >= 0 && x1 <= 1 && x2 >= 0 && x2 <= 1 && x1 > x2) {
+                return x2;//MotionEquation(u1,v1,x2);
+            }
+            if (x1 >= 0 && x1 <= 1 && !(x2 >= 0 && x2 <= 1)) {
+                return x1;//MotionEquation(u1,v1,x1);
+            }
+            if (!(x1 >= 0 && x1 <= 1) && (x2 >= 0 && x2 <= 1)) {
+                return x2;//MotionEquation(u1,v1,x2);
+            }
+
+        }
+        return -1;
+    }
+    public double CollisionDetect(Agent agent,Obstacle o , Vector2D v)
+    {
+        return CollisionDetect(agent.getPos(),o.getPos(),Vector2D.add(agent.getPos(),v),
+                o.getPos(),ConfigManager.i().getAgentSize(),o.r);
+    }
+    public Vector2D CollisionLocation(Agent agent,Vector2D v)
+    {
+        Optional<Double> p = obstacles.stream().
+                map(obstacle -> CollisionDetect(agent, obstacle, v)).
+                filter(aDouble -> aDouble >= 0 && aDouble <= 1)
+                .min(Double::compareTo);
+        return p.map(aDouble -> MotionEquation(agent.getPos(), Vector2D.add(agent.getPos(), v), aDouble)).
+                orElseGet(() -> Vector2D.add(agent.getPos(), v));
+
+    }
     public Agent getAgent(int agent) {
 
         return teams.stream().flatMap(team -> team.agents.stream()).filter(agent1 -> agent1.id == agent).findFirst().get();
     }
 
-    private boolean isNotInMap(Vector2D pos)
-    {
-        return pos.getX()< 0 || pos.getY()< 0 || pos.getX()> ConfigManager.i().getMapWidth() || pos.getY() > ConfigManager.i().getMapHeight() ;
+    private boolean isNotInMap(Vector2D pos) {
+        return pos.getX() < 0 || pos.getY() < 0 || pos.getX() > ConfigManager.i().getMapWidth() || pos.getY() > ConfigManager.i().getMapHeight();
     }
+
     public List<Bullet> getBullets() {
         return bullets;
     }
 
-    public World getWorld() {
-        return world;
-    }
 }

@@ -20,7 +20,7 @@ public class Agent
     int ammo;
     int id;
 
-    transient Body circle;
+//    transient Body circle;
     transient Team team;
     Vector2D pos;
     double orientation;
@@ -39,16 +39,17 @@ public class Agent
         this.pos = pos.clone();
         id = gid++;
         health = ConfigManager.i().getBaseHealth();
-        circle = new Body();
-        circle.addFixture(Geometry.createCircle(ConfigManager.i().getAgentSize()));
-        circle.setMass(MassType.NORMAL);
-        circle.translate(pos.getX(), pos.getY());
-
+//        circle = new Body();
+//        circle.addFixture(Geometry.createCircle(ConfigManager.i().getAgentSize()));
+//        circle.setMass(MassType.NORMAL);
+//        circle.translate(pos.getX(), pos.getY());
+//
 
     }
     public void move(Vector2D v)
     {
-        circle.setLinearVelocity(v.getX(),v.getY());
+            pos.add(v);
+//        circle.setLinearVelocity(v.getX(),v.getY());
     }
     public void rotate(double w)
     {
@@ -62,8 +63,12 @@ public class Agent
     public Vector2D getPos() {
         return pos;
     }
-    public void sync()
-    {
-        pos = new Vector2D(circle.getWorldCenter().x,circle.getWorldCenter().y);
+
+    public void setPos(Vector2D pos) {
+        this.pos = pos;
     }
+//    public void sync()
+//    {
+//        pos = new Vector2D(circle.getWorldCenter().x,circle.getWorldCenter().y);
+//    }
 }

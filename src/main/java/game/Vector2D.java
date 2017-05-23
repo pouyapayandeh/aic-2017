@@ -23,7 +23,10 @@ public class Vector2D
         x+=velocity.x;
         y+=velocity.y;
     }
-
+    public double cross(Vector2D a)
+    {
+        return x*a.x + y*a.y;
+    }
     @Override
     protected Vector2D clone()
     {
@@ -36,5 +39,12 @@ public class Vector2D
 
     public double getY() {
         return y;
+    }
+
+    static public Vector2D sub(Vector2D v1,Vector2D v2) {
+        return new Vector2D(v1.x - v2.x ,v1.y - v2.y);
+    }
+    static public Vector2D add(Vector2D v1,Vector2D v2) {
+        return new Vector2D(v1.x + v2.x ,v1.y + v2.y);
     }
 }

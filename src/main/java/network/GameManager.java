@@ -34,7 +34,7 @@ public class GameManager
         while(true)
         {
             ArrayList<Command> commands = new ArrayList<>();
-            MoveCommand cmd = new MoveCommand(0, 0, new Vector2D(15, 15));
+            MoveCommand cmd = new MoveCommand(0, 0, new Vector2D(3, 3));
 
 
             commands.add(cmd);
@@ -46,7 +46,7 @@ public class GameManager
             gameServer.broadcast(msg);
             try
             {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException e)
             {
                 e.printStackTrace();

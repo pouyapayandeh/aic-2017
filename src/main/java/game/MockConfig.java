@@ -31,7 +31,7 @@ public class MockConfig implements GameConfig
 
     @Override
     public double getBulletVelocity() {
-        return 100;
+        return 10;
     }
 
     @Override
