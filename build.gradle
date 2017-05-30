@@ -9,7 +9,16 @@ repositories {
     mavenCentral()
     maven { url "http://clojars.org/repo" }
 }
-
+sourceSets {
+    main
+            {
+                java
+                        {
+                            srcDirs 'src/main/java'
+                            srcDirs 'src/client/java'
+                        }
+            }
+}
 dependencies {
 //    compile "org.glassfish.tyrus:tyrus-server:1.13.1"
 //    compile "org.glassfish.tyrus:tyrus-container-grizzly-server:1.13.1"

@@ -64,17 +64,17 @@ function onMessage(evt) {
     }
 }
 function drawObstacle(ctx, obstacle) {
-    // ctx.beginPath();
-    // ctx.arc(obstacle.x,obstacle.y,obstacle.r,0,2*Math.PI);
-    // ctx.fillStyle ="grey";
-    // ctx.fill();
-    // ctx.stroke();
-    var x, y;
-    var pad = 50* (obstacle.r/350);
-    x = obstacle.x - obstacle.r -pad;
-    y = obstacle.y - obstacle.r-pad;
-
-    ctx.drawImage(img_cactus, x, y, 2 * (obstacle.r+pad), 2 * (obstacle.r+pad));
+    ctx.beginPath();
+    ctx.arc(obstacle.x,obstacle.y,obstacle.r,0,2*Math.PI);
+    ctx.fillStyle ="grey";
+    ctx.fill();
+    ctx.stroke();
+    // var x, y;
+    // var pad = 50* (obstacle.r/350);
+    // x = obstacle.x - obstacle.r -pad;
+    // y = obstacle.y - obstacle.r-pad;
+    //
+    // ctx.drawImage(img_cactus, x, y, 2 * (obstacle.r+pad), 2 * (obstacle.r+pad));
 }
 function drawBullet(ctx, bullet) {
     ctx.beginPath();
@@ -86,35 +86,35 @@ function drawBullet(ctx, bullet) {
 }
 function drawAgent(ctx, agent, color) {
     var r = 10;
-    // ctx.beginPath();
-    // ctx.arc(agent.pos.x, agent.pos.y, r, 0, 2 * Math.PI);
-    // ctx.fillStyle = color;
-    // ctx.fill();
-    // ctx.stroke();
-    // ctx.save();
-    // ctx.beginPath();
-    // ctx.lineWidth = "1";
-    // ctx.strokeStyle = "black"; // Green path
-    // ctx.moveTo(agent.pos.x, agent.pos.y);
-    // var xx = agent.pos.x + (r * Math.cos(agent.orientation));
-    // var yy = agent.pos.y + (r * Math.sin(agent.orientation));
-    // ctx.lineTo(xx, yy);
-    // ctx.stroke();
-    // ctx.restore();
-
-    var cx = 381
-    var cy = 461;
-    var or =450;
-
-    var pad = 200*r/or;
-    var x = cx*r/or;
-    var y = cy*r/or;
+    ctx.beginPath();
+    ctx.arc(agent.pos.x, agent.pos.y, r, 0, 2 * Math.PI);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.stroke();
     ctx.save();
-    ctx.translate(agent.pos.x-x, agent.pos.y-y);
-    ctx.rotate(agent.orientation - Math.PI/2);
-
-        ctx.drawImage(img_indian, agent.pos.x-x, agent.pos.y-y, 2 * (r+pad), 2 * (r+pad));
+    ctx.beginPath();
+    ctx.lineWidth = "1";
+    ctx.strokeStyle = "black"; // Green path
+    ctx.moveTo(agent.pos.x, agent.pos.y);
+    var xx = agent.pos.x + (r * Math.cos(agent.orientation));
+    var yy = agent.pos.y + (r * Math.sin(agent.orientation));
+    ctx.lineTo(xx, yy);
+    ctx.stroke();
     ctx.restore();
+
+    // var cx = 381
+    // var cy = 461;
+    // var or =450;
+    //
+    // var pad = 200*r/or;
+    // var x = cx*r/or;
+    // var y = cy*r/or;
+    // ctx.save();
+    // ctx.translate(agent.pos.x-x, agent.pos.y-y);
+    // ctx.rotate(agent.orientation - Math.PI/2);
+    //
+    //     ctx.drawImage(img_indian, agent.pos.x-x, agent.pos.y-y, 2 * (r+pad), 2 * (r+pad));
+    // ctx.restore();
 }
 function onError(evt) {
     writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);

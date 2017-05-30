@@ -40,12 +40,12 @@ public class GameClient extends WebSocketClient
 
     }
 
-    public static void main(String[] args) throws URISyntaxException, InterruptedException
-    {
-        GameClient gc = new GameClient(new URI("ws://localhost:8887"));
-        gc.connect();
-        Thread.sleep(1000);
-        gc.close();
-
-    }
+//    public static void main(String[] args) throws URISyntaxException, InterruptedException
+//    {
+//        GameClient gc = new GameClient(new URI("ws://localhost:8887"));
+//        gc.connect();
+//        Thread.sleep(1000);
+//        gc.close();
+//
+//    }
 }
