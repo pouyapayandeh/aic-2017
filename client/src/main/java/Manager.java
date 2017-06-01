@@ -8,8 +8,9 @@ import java.net.URISyntaxException;
  */
 public class Manager {
     public static void main(String[] args) throws URISyntaxException, InterruptedException {
+        System.out.println("Running");
         Client client = new Client(new URI("ws://localhost:8888"));
         client.connect();
-        Thread.sleep(100000);
+        Thread.sleep(1000);
     }
 }

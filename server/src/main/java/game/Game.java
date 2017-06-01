@@ -29,8 +29,8 @@ public class Game {
         height = ConfigManager.i().getMapHeight();
         Team A = new Team("Team A", this);
         Team B = new Team("Team B", this);
-        A.newAgent(new Vector2D(10, 10));
-        B.newAgent(new Vector2D(100, 100));
+        A.newAgent(new Vector2D(10, 10),0);
+        B.newAgent(new Vector2D(100, 100),0);
         Obstacle obstacle = new Obstacle(300, 300, 50);
         obstacles.add(obstacle);
         teams.add(A);

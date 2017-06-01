@@ -4,28 +4,63 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 
 sourceCompatibility = 1.8
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'application'
+    repositories {
+        mavenCentral()
+        maven { url "http://clojars.org/repo" }
+    }
+}
 
-repositories {
-    mavenCentral()
-    maven { url "http://clojars.org/repo" }
-}
-sourceSets {
-    main
-            {
-                java
-                        {
-                            srcDirs 'src/main/java'
-                            srcDirs 'src/client/java'
+
+
+
+project(":client")
+        {
+            sourceSets
+                    {
+                        main {
+                            java {
+                                srcDir 'client/src'
+                            }
                         }
+                    }
+            dependencies
+                    {
+                        compile project(":server")
+                    }
+            mainClassName = "Manager"
+            jar {
+                manifest {
+                    attributes 'Main-Class': mainClassName
+                }
             }
-}
-dependencies {
-//    compile "org.glassfish.tyrus:tyrus-server:1.13.1"
-//    compile "org.glassfish.tyrus:tyrus-container-grizzly-server:1.13.1"
-    compile "org.java-websocket:java-websocket:1.3.2"
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.6'
-    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.6'
-    compile "com.google.code.gson:gson:2.8.0"
-    compile "org.dyn4j:dyn4j:3.2.3"
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
+        }
+project(":server")
+        {
+            sourceSets
+                    {
+                        main {
+                            java {
+                                srcDir 'server/src'
+                            }
+                        }
+                    }
+            dependencies {
+                compile "org.java-websocket:java-websocket:1.3.2"
+                compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.6'
+                compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.6'
+                compile "com.google.code.gson:gson:2.8.0"
+                compile "org.dyn4j:dyn4j:3.2.3"
+                testCompile group: 'junit', name: 'junit', version: '4.12'
+            }
+            mainClassName = "game.Main"
+            jar {
+                manifest {
+                    attributes 'Main-Class': mainClassName
+                }
+            }
+
+        }
+

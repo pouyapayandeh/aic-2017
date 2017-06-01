@@ -23,10 +23,11 @@ public class Team
         this.game =game;
         agents = new ArrayList<>();
     }
-    public void newAgent(Vector2D pos)
+    public void newAgent(Vector2D pos , float w)
     {
         Agent agent = new Agent(pos);
         agent.setTeam(this);
+        agent.orientation= w;
         agents.add(agent);
     }
 
