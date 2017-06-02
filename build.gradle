@@ -13,9 +13,6 @@ allprojects {
     }
 }
 
-
-
-
 project(":client")
         {
             sourceSets
