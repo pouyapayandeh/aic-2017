@@ -7,6 +7,7 @@ import game.command.Command;
 import game.command.MoveCommand;
 import game.command.RotateCommand;
 import game.command.ShootCommand;
+import org.java_websocket.WebSocket;
 
 import java.util.ArrayList;
 
@@ -33,26 +34,32 @@ public class GameManager
         Gson gson = new Gson();
         while(true)
         {
-            ArrayList<Command> commands = new ArrayList<>();
-            MoveCommand cmd = new MoveCommand(0, 0, new Vector2D(3, 3));
+//            ArrayList<Command> commands = new ArrayList<>();
+//            MoveCommand cmd = new MoveCommand(0, 0, new Vector2D(3, 3));
+//
+//
+//            commands.add(cmd);
+//            commands.add(new RotateCommand(1,1,Math.PI/16));
+//            commands.add(new ShootCommand(1,1));
+//            game.doTurn(commands);
 
 
-            commands.add(cmd);
-            commands.add(new RotateCommand(1,1,Math.PI/16));
-            commands.add(new ShootCommand(1,1));
-            game.doTurn(commands);
-            String msg = gson.toJson(game);
+
            // System.out.println(msg);
+            String msg = gson.toJson(game);
             gameServer.broadcast(msg);
             try
             {
-                Thread.sleep(100);
+                Thread.sleep(1000);
             } catch (InterruptedException e)
             {
                 e.printStackTrace();
             }
         }
     }
+    public void onMessage(WebSocket socket,String s)
+    {
 
+    }
 
 }

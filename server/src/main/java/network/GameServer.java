@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.util.function.BiConsumer;
 
 /**
  * Created by Pouya Payandeh on 4/11/2017.
@@ -17,6 +18,7 @@ import java.net.UnknownHostException;
 public class GameServer extends WebSocketServer
 {
     Logger logger = LoggerFactory.getLogger(GameServer.class);
+    BiConsumer<WebSocket , String > onMessage;
     GameServer(int port)
     {
         super(new InetSocketAddress(port));
@@ -39,7 +41,7 @@ public class GameServer extends WebSocketServer
     @Override
     public void onMessage(WebSocket webSocket, String s)
     {
-
+        onMessage.accept(webSocket,s);
     }
 
     @Override
