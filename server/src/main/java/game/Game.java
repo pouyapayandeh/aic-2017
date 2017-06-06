@@ -2,9 +2,14 @@ package game;
 
 import game.command.Command;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 /**
  * Created by Pouya Payandeh on 4/16/2017.
@@ -27,6 +32,49 @@ public class Game extends GameData {
         obstacles.add(obstacle);
         teams.add(A);
         teams.add(B);
+    }
+
+    public void setupGame(URI map)
+    {
+        try
+        {
+            Scanner scanner = new Scanner(new File(map));
+            totalTurns = scanner.nextInt();
+            int teamNum = scanner.nextInt();
+            width = scanner.nextInt();
+            height = scanner.nextInt();
+            int obstacleNum = scanner.nextInt();
+            for (int i = 0; i < obstacleNum; i++)
+            {
+                int x,y,r;
+                x = scanner.nextInt();
+                y = scanner.nextInt();
+                r = scanner.nextInt();
+                obstacles.add(new Obstacle(x,y,r));
+            }
+            for(int i = 0 ; i < teamNum ; i++)
+            {
+                scanner.nextInt();
+                String teamName = scanner.next();
+                Team t = new Team(teamName,this);
+                int agentNum;
+                agentNum = scanner.nextInt();
+                for (int j = 0; j < agentNum; j++)
+                {
+                    scanner.nextInt();
+                    int x,y;
+                    double w;
+                    x = scanner.nextInt();
+                    y = scanner.nextInt();
+                    w = scanner.nextDouble();
+                    t.newAgent(new Vector2D(x,y),w);
+                }
+                teams.add(t);
+            }
+        } catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void doTurn(List<Command> commands) {

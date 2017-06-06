@@ -9,6 +9,7 @@ import game.command.RotateCommand;
 import game.command.ShootCommand;
 import org.java_websocket.WebSocket;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 /**
@@ -26,7 +27,13 @@ public class GameManager
     public void startGame()
     {
         thread = new Thread(this::loop);
-        game.setupGame();
+        try
+        {
+            game.setupGame(this.getClass().getResource("../map1.txt").toURI());
+        } catch (URISyntaxException e)
+        {
+            e.printStackTrace();
+        }
         thread.start();
     }
     public void loop()
@@ -34,14 +41,15 @@ public class GameManager
         Gson gson = new Gson();
         while(true)
         {
-//            ArrayList<Command> commands = new ArrayList<>();
+            ArrayList<Command> commands = new ArrayList<>();
 //            MoveCommand cmd = new MoveCommand(0, 0, new Vector2D(3, 3));
 //
 //
 //            commands.add(cmd);
-//            commands.add(new RotateCommand(1,1,Math.PI/16));
-//            commands.add(new ShootCommand(1,1));
-//            game.doTurn(commands);
+//            commands.add(new RotateCommand(0,1,Math.PI/16));
+////            commands.add(new ShootCommand(1,0));
+
+            game.doTurn(commands);
 
 
 

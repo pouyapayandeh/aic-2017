@@ -23,7 +23,7 @@ public class Team
         this.game =game;
         agents = new ArrayList<>();
     }
-    public void newAgent(Vector2D pos , float w)
+    public void newAgent(Vector2D pos , double w)
     {
         Agent agent = new Agent(pos);
         agent.setTeam(this);
