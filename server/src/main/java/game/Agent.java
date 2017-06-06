@@ -67,6 +67,11 @@ public class Agent
     public void setPos(Vector2D pos) {
         this.pos = pos;
     }
+
+    public int getId()
+    {
+        return id;
+    }
 //    public void sync()
 //    {
 //        pos = new Vector2D(circle.getWorldCenter().x,circle.getWorldCenter().y);

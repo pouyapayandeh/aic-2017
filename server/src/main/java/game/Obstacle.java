@@ -36,4 +36,9 @@ public class Obstacle
 //        y = circle.getWorldCenter().y;
 //        pos = new Vector2D(,);
     }
+
+    public double getR()
+    {
+        return r;
+    }
 }

@@ -34,7 +34,6 @@ public class jsonTestUnit
         String elem = gson.toJson(c,Command.class);
         Command cmd = gson.fromJson(elem,Command.class);
         assertEquals(cmd instanceof ShootCommand,true);
-
     }
 
 }

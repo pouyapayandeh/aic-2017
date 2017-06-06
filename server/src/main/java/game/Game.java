@@ -9,26 +9,18 @@ import java.util.Optional;
 /**
  * Created by Pouya Payandeh on 4/16/2017.
  */
-public class Game {
-
-    List<Team> teams;
-    List<Bullet> bullets;
-    List<Obstacle> obstacles;
-    int time;
-    int width, height;
+public class Game extends GameData {
 
 
     public Game() {
-        teams = new ArrayList<>();
-        bullets = new ArrayList<>();
-        obstacles = new ArrayList<>();
+        super();
     }
 
     public void setupGame() {
         width = ConfigManager.i().getMapWidth();
         height = ConfigManager.i().getMapHeight();
-        Team A = new Team("Team A", this);
-        Team B = new Team("Team B", this);
+        Team A = new Team("TeamA", this);
+        Team B = new Team("TeamB", this);
         A.newAgent(new Vector2D(10, 10),0);
         B.newAgent(new Vector2D(100, 100),0);
         Obstacle obstacle = new Obstacle(300, 300, 50);
