@@ -4,13 +4,14 @@ var img_cactus;
 var img_indian;
 var img_tent;
 var img_indian2;
-
+var img_bg;
 function init() {
     output = document.getElementById("output");
-    img_cactus = document.getElementById("cactus2");
+    img_cactus = document.getElementById("cactus");
     img_indian = document.getElementById("indian");
     img_tent = document.getElementById("tent");
     img_indian2 = document.getElementById("indian2");
+    img_bg = document.getElementById("bg");
 
     testWebSocket();
 }
@@ -44,9 +45,12 @@ function onMessage(evt) {
     var ctx = c.getContext("2d");
     // ctx.drawImage(img, 10, 10);
     var game = JSON.parse(evt.data);
-    ctx.clearRect(0, 0, c.width, c.height);
 
-    var colors = ["red", "blue"]
+    var colors = ["red", "blue"];
+    c.setAttribute("width",game['width']);
+    c.setAttribute("height",game['height']);
+    // ctx.clearRect(0, 0, c.width, c.height);
+    ctx.drawImage(img_bg,0,0);
     for (var i = 0; i < game['teams'].length; i++) {
         team = game['teams'][i];
         for (var j = 0; j < team['agents'].length; j++) {
@@ -69,12 +73,14 @@ function drawObstacle(ctx, obstacle) {
     ctx.fillStyle ="grey";
     ctx.fill();
     ctx.stroke();
-    // var x, y;
-    // var pad = 50* (obstacle.r/350);
-    // x = obstacle.x - obstacle.r -pad;
-    // y = obstacle.y - obstacle.r-pad;
-    //
-    // ctx.drawImage(img_cactus, x, y, 2 * (obstacle.r+pad), 2 * (obstacle.r+pad));
+    var x, y;
+
+    var pad = (obstacle.r);
+    console.log(pad);
+    x = obstacle.x - obstacle.r -pad;
+    y = obstacle.y - obstacle.r-pad;
+
+    ctx.drawImage(img_cactus, x, y, 2 * (obstacle.r+pad), 2 * (obstacle.r+pad));
 }
 function drawBullet(ctx, bullet) {
     ctx.beginPath();
