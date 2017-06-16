@@ -1,3 +1,5 @@
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
 import network.Client;
 
 import java.net.URI;
@@ -8,9 +10,16 @@ import java.net.URISyntaxException;
  */
 public class Manager {
     public static void main(String[] args) throws URISyntaxException, InterruptedException {
-        System.out.println("Running");
-        Client client = new Client(new URI("ws://localhost:8888"));
-        client.connect();
-        Thread.sleep(1000);
+        ClientArgs clientArgs = new ClientArgs();
+        try
+        {
+            JCommander jCommander = new JCommander(clientArgs,args);
+            System.out.println(clientArgs.cmd);
+            Interpreter i = new Interpreter(clientArgs.cmd,clientArgs.host,clientArgs.port);
+            i.cycle();
+        }catch (ParameterException e)
+        {
+            System.err.println(e.getMessage());
+        }
     }
 }

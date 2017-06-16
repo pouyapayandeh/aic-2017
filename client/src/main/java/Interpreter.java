@@ -5,6 +5,7 @@ import game.command.MoveCommand;
 import game.command.RotateCommand;
 import game.command.ShootCommand;
 import network.DataProvider;
+import network.NetworkDataProvider;
 import sun.swing.BakedArrayList;
 
 import java.io.PrintWriter;
@@ -25,13 +26,16 @@ public class Interpreter
 
     public Interpreter()
     {
-        dataProvider = new DataProvider();
+        dataProvider = new NetworkDataProvider();
         applicationManager = new ExternalApplicationManager();
     }
-
+    public Interpreter(String cmd,String host,int port)
+    {
+        dataProvider = new NetworkDataProvider(host,port);
+        applicationManager = new ExternalApplicationManager(cmd);
+    }
     public void cycle()
     {
-        applicationManager.setPath("C:\\Users\\Pouya Payandeh\\Documents\\Visual Studio 2015\\Projects\\ConsoleApplication1\\Release\\ConsoleApplication1.exe");
         applicationManager.start();
         PrintWriter p = applicationManager.getWriter();
         ExecutorService executorService = Executors.newFixedThreadPool(3);
@@ -99,10 +103,8 @@ public class Interpreter
 
                 System.out.println(commands);
 //                Write Data Back
-
+                dataProvider.sendCommands(commands);
             }
-
-
         }
     }
 
@@ -143,7 +145,6 @@ public class Interpreter
 
     public static void main(String[] args)
     {
-        Interpreter i = new Interpreter();
-        i.cycle();
+
     }
 }

@@ -11,6 +11,14 @@ public class ExternalApplicationManager
     private Scanner scanner;
     private PrintWriter writer;
 
+    public ExternalApplicationManager(String path)
+    {
+        this.path = path;
+    }
+    public ExternalApplicationManager()
+    {
+
+    }
     public String getPath()
     {
         return path;
@@ -26,6 +34,10 @@ public class ExternalApplicationManager
         try
         {
             process = Runtime.getRuntime().exec(path);
+            Runtime.getRuntime().addShutdownHook(new Thread(() ->
+            {
+                process.destroy();
+            }));
 
         } catch (IOException e)
         {
