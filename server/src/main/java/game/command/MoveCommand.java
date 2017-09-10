@@ -25,7 +25,7 @@ public class MoveCommand implements  Command
     @Override
     public void apply(Game game)
     {
-        Agent ag = game.getAgent(agent);
+         Agent ag = game.getAgent(agent);
         if(ag.getTeam().getId() == team) {
             Vector2D loc = game.CollisionLocation(ag, v);
             if(loc != null)

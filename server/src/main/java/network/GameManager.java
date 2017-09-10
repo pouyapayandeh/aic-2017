@@ -1,6 +1,7 @@
 package network;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import game.Game;
 import game.Vector2D;
 import game.command.Command;
@@ -9,8 +10,12 @@ import game.command.RotateCommand;
 import game.command.ShootCommand;
 import org.java_websocket.WebSocket;
 
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Pouya Payandeh on 4/16/2017.
@@ -20,40 +25,33 @@ public class GameManager
     Game game = new Game();
     GameServer gameServer;
     Thread thread ;
-    public GameManager()
+    Gson gson;
+    URI mapfile;
+    List<Command> commands = Collections.synchronizedList(new ArrayList<Command>());
+    public GameManager(int port, String map, String logDir)
     {
-        gameServer = new GameServer(8888);
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Command.class, new CommandAdapter());
+        gson = builder.create();
+        gameServer = new GameServer(port);
+        gameServer.setOnMessage(this::onMessage);
+        mapfile = Paths.get(map).toUri();
+
     }
+
     public void startGame()
     {
         thread = new Thread(this::loop);
-        try
-        {
-            game.setupGame(this.getClass().getResource("../map1.txt").toURI());
-        } catch (URISyntaxException e)
-        {
-            e.printStackTrace();
-        }
+        game.setupGame(mapfile);
         thread.start();
     }
-    public void loop()
+    private void loop()
     {
-        Gson gson = new Gson();
         while(true)
         {
-            ArrayList<Command> commands = new ArrayList<>();
-//            MoveCommand cmd = new MoveCommand(0, 0, new Vector2D(3, 3));
-//
-//
-//            commands.add(cmd);
-//            commands.add(new RotateCommand(0,1,Math.PI/16));
-////            commands.add(new ShootCommand(1,0));
-
+            System.out.println(commands);
             game.doTurn(commands);
-
-
-
-           // System.out.println(msg);
+            commands.clear();
             String msg = gson.toJson(game);
             gameServer.broadcast(msg);
             try
@@ -65,9 +63,9 @@ public class GameManager
             }
         }
     }
-    public void onMessage(WebSocket socket,String s)
+    private void onMessage(WebSocket socket, String s)
     {
-
+        commands.add(gson.fromJson(s,Command.class));
     }
 
 }

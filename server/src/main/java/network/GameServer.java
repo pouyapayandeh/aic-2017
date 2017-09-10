@@ -19,6 +19,12 @@ public class GameServer extends WebSocketServer
 {
     Logger logger = LoggerFactory.getLogger(GameServer.class);
     BiConsumer<WebSocket , String > onMessage;
+
+    public void setOnMessage(BiConsumer<WebSocket, String> onMessage)
+    {
+        this.onMessage = onMessage;
+    }
+
     GameServer(int port)
     {
         super(new InetSocketAddress(port));
@@ -57,4 +63,5 @@ public class GameServer extends WebSocketServer
             conn.send(msg);
         }
     }
+
 }

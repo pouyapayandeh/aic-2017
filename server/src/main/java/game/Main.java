@@ -1,5 +1,6 @@
 package game;
 
+import com.beust.jcommander.JCommander;
 import network.GameManager;
 
 /**
@@ -9,7 +10,9 @@ public class Main
 {
     public static void main(String[] args)
     {
-        GameManager manager = new GameManager();
+        ServerArgs serverArgs = new ServerArgs();
+        new JCommander(serverArgs,args);
+        GameManager manager = new GameManager(serverArgs.port,serverArgs.map,serverArgs.logDir);
         manager.startGame();
     }
 }
