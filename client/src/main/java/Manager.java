@@ -13,7 +13,7 @@ public class Manager {
         ClientArgs clientArgs = new ClientArgs();
         try
         {
-            JCommander jCommander = new JCommander(clientArgs,args);
+            new JCommander(clientArgs,args);
             System.out.println(clientArgs.cmd);
             Interpreter i = new Interpreter(clientArgs.cmd,clientArgs.host,clientArgs.port);
             i.cycle();
