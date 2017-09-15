@@ -27,7 +27,7 @@ public class MoveCommand implements  Command
     {
          Agent ag = game.getAgent(agent);
         if(ag.getTeam().getId() == team) {
-            Vector2D loc = game.CollisionLocation(ag, v);
+            Vector2D loc = game.collisionLocation(ag, v);
             if(loc != null)
                 ag.setPos(loc);
         }
