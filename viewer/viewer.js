@@ -1,14 +1,14 @@
 var wsUri = "ws://localhost:8888/";
 var output;
 var img_cactus;
-var img_indian;
+var img_indian1;
 var img_tent;
 var img_indian2;
 var img_bg;
 function init() {
     output = document.getElementById("output");
     img_cactus = document.getElementById("cactus");
-    img_indian = document.getElementById("indian");
+    img_indian1 = document.getElementById("indian1");
     img_tent = document.getElementById("tent");
     img_indian2 = document.getElementById("indian2");
     img_bg = document.getElementById("bg");
@@ -84,43 +84,54 @@ function drawObstacle(ctx, obstacle) {
 }
 function drawBullet(ctx, bullet) {
     ctx.beginPath();
-    ctx.arc(bullet.pos.x, bullet.pos.y, 1, 0, 2 * Math.PI);
-    ctx.fillStyle = "red";
-    ctx.fill();
+    // ctx.arc(bullet.pos.x, bullet.pos.y, 1, 0, 2 * Math.PI);
+    ctx.moveTo(bullet.pos.x, bullet.pos.y);
+    var xx  = bullet.pos.x + (Math.cos(bullet.orientation)*1000);
+    var yy  = bullet.pos.y + (Math.sin(bullet.orientation)*1000);
+    ctx.lineTo(xx,yy);
+    // ctx.fillStyle = "red";
+    // ctx.fill();
+    ctx.strokeStyle = "red";
     ctx.stroke();
 
 }
 function drawAgent(ctx, agent, color) {
     var r = 10;
-    ctx.beginPath();
-    ctx.arc(agent.pos.x, agent.pos.y, r, 0, 2 * Math.PI);
-    ctx.fillStyle = color;
-    ctx.fill();
-    ctx.stroke();
+
     ctx.save();
-    ctx.beginPath();
-    ctx.lineWidth = "1";
-    ctx.strokeStyle = "black"; // Green path
-    ctx.moveTo(agent.pos.x, agent.pos.y);
-    var xx = agent.pos.x + (r * Math.cos(agent.orientation));
-    var yy = agent.pos.y + (r * Math.sin(agent.orientation));
-    ctx.lineTo(xx, yy);
-    ctx.stroke();
+
+    var x = agent.pos.x - 2*r;
+    var y = agent.pos.y - 2*r;
+
+    ctx.translate(agent.pos.x, agent.pos.y);
+    ctx.rotate(agent.orientation - Math.PI/2);
+
+    //ctx.drawImage(img_cactus, x, y, 2 * (obstacle.r+pad), 2 * (obstacle.r+pad));
+
+    if(color == "blue")
+        ctx.drawImage(img_indian1,- 2*r,- 2*r, 4 * (r), 4 * (r));
+    else
+        ctx.drawImage(img_indian2,- 2*r,- 2*r, 4 * (r), 4 * (r));
     ctx.restore();
 
-    // var cx = 381
-    // var cy = 461;
-    // var or =450;
-    //
-    // var pad = 200*r/or;
-    // var x = cx*r/or;
-    // var y = cy*r/or;
+
+    // ctx.beginPath();
+    // ctx.arc(agent.pos.x, agent.pos.y, r, 0, 2 * Math.PI);
+    // ctx.fillStyle = color;
+    // ctx.fill();
+    // ctx.stroke();
     // ctx.save();
-    // ctx.translate(agent.pos.x-x, agent.pos.y-y);
-    // ctx.rotate(agent.orientation - Math.PI/2);
-    //
-    //     ctx.drawImage(img_indian, agent.pos.x-x, agent.pos.y-y, 2 * (r+pad), 2 * (r+pad));
+    // ctx.beginPath();
+    // ctx.lineWidth = "1";
+    // ctx.strokeStyle = "black"; // Green path
+    // ctx.moveTo(agent.pos.x, agent.pos.y);
+    // var xx = agent.pos.x + (r * Math.cos(agent.orientation));
+    // var yy = agent.pos.y + (r * Math.sin(agent.orientation));
+    // ctx.lineTo(xx, yy);
+    // ctx.stroke();
     // ctx.restore();
+
+
 }
 function onError(evt) {
     writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
