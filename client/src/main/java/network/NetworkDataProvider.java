@@ -17,13 +17,16 @@ public class NetworkDataProvider extends DataProvider
 {
     Client client;
     Gson gson;
+    int teamId =0 ;
+    String teamName;
     public NetworkDataProvider()
     {
-        this("localhost",8888);
+        this("localhost",8888,"No Name");
     }
-    public NetworkDataProvider(String host,int port)
+    public NetworkDataProvider(String host,int port , String name)
     {
         super();
+        teamName = name;
         System.out.println("Running");
         try
         {
@@ -32,10 +35,22 @@ public class NetworkDataProvider extends DataProvider
         {
             e.printStackTrace();
         }
-        client.connect();
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Command.class,new  CommandAdapter());
         gson = builder.create();
+
+        client.setOnHeader(this::onHeader);
+        client.connect();
+
+    }
+
+    private void onHeader(String s)
+    {
+        teamId = gson.fromJson(s,Header.class).teamId;
+        System.out.println("Team Id : " + teamId);
+        Header header = new Header(teamId,teamName);
+        String msg = gson.toJson(header, Header.class);
+        client.send(msg+"\n");
     }
 
     @Override
@@ -48,7 +63,7 @@ public class NetworkDataProvider extends DataProvider
     @Override
     public int getTeamId()
     {
-        return 0;
+        return teamId;
     }
 
     @Override

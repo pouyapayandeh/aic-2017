@@ -9,6 +9,8 @@ public class ClientArgs
     public boolean help;
     @Parameter(names = {"-c","--command"} ,description = "Path of the program to interact with",required = true)
     public String cmd;
+    @Parameter(names = {"-n","--name"} ,description = "Team's name",required = true)
+    public String name;
     @Parameter(names = {"-h","--host"} ,description = "remote host to connect",arity = 1)
     public String host = "localhost";
     @Parameter(names = {"-p" , "--port"},description = "remote port to connect")

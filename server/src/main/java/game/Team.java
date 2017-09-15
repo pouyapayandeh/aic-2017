@@ -15,6 +15,7 @@ public class Team
 
     transient  Game game;
 
+
     public Team(String name ,Game game)
     {
         this.id = gid++;
@@ -45,5 +46,10 @@ public class Team
 
     public int getScore() {
         return score;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
     }
 }

@@ -19,10 +19,16 @@ public class GameServer extends WebSocketServer
 {
     Logger logger = LoggerFactory.getLogger(GameServer.class);
     BiConsumer<WebSocket , String > onMessage;
+    BiConsumer<WebSocket , ClientHandshake > onConnect;
 
     public void setOnMessage(BiConsumer<WebSocket, String> onMessage)
     {
         this.onMessage = onMessage;
+    }
+
+    public void setOnConnect(BiConsumer<WebSocket, ClientHandshake> onConnect)
+    {
+        this.onConnect = onConnect;
     }
 
     GameServer(int port)
@@ -36,6 +42,7 @@ public class GameServer extends WebSocketServer
     public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake)
     {
         logger.info("A Client Connected");
+        onConnect.accept(webSocket,clientHandshake);
     }
 
     @Override

@@ -23,15 +23,14 @@ public class Interpreter
 {
     DataProvider dataProvider;
     ExternalApplicationManager applicationManager;
-
     public Interpreter()
     {
         dataProvider = new NetworkDataProvider();
         applicationManager = new ExternalApplicationManager();
     }
-    public Interpreter(String cmd,String host,int port)
+    public Interpreter(String cmd,String name ,String host,int port)
     {
-        dataProvider = new NetworkDataProvider(host,port);
+        dataProvider = new NetworkDataProvider(host,port , name);
         applicationManager = new ExternalApplicationManager(cmd);
     }
     public void cycle()
@@ -75,18 +74,18 @@ public class Interpreter
 
                                 double dX = scanner.nextDouble();
                                 double dY = scanner.nextDouble();
-                                commands.add(new MoveCommand(0,agentId,new Vector2D(dX,dY)));
+                                commands.add(new MoveCommand(dataProvider.getTeamId() ,agentId,new Vector2D(dX,dY)));
                             }
 
                             if(command.equals("rotate"))
                             {
 
                                 double dW = scanner.nextDouble();
-                                commands.add(new RotateCommand(0,agentId,dW));
+                                commands.add(new RotateCommand(dataProvider.getTeamId(),agentId,dW));
                             }
                             if(command.equals("shoot"))
                             {
-                                commands.add(new ShootCommand(0,agentId));
+                                commands.add(new ShootCommand(dataProvider.getTeamId() ,agentId));
                             }
 
                         }
@@ -141,10 +140,5 @@ public class Interpreter
         {
             p.printf("%f %f %f\n", obstacle.getPos().getX(), obstacle.getPos().getY(), obstacle.getR());
         });
-    }
-
-    public static void main(String[] args)
-    {
-
     }
 }

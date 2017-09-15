@@ -5,8 +5,6 @@ import game.command.Command;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -79,11 +77,8 @@ public class Game extends GameData {
 
     public void doTurn(List<Command> commands) {
         moveBullets();
-
-//        sync();
         removeBullets();
         commands.forEach(command -> command.apply(this));
-//        world.updatev(1);
         time += ConfigManager.i().getTimeStep();
     }
 
@@ -109,7 +104,7 @@ public class Game extends GameData {
         return null;
     }
 
-    public double CollisionDetect(Vector2D u1, Vector2D u2, Vector2D v1, Vector2D v2, double r1, double r2) {
+    public double collisionDetect(Vector2D u1, Vector2D u2, Vector2D v1, Vector2D v2, double r1, double r2) {
         double R = r1 + r2;
         double R2 = R * R;
         Vector2D v = Vector2D.sub(v2, v1);
@@ -125,33 +120,33 @@ public class Game extends GameData {
         double delta = b * b - 4 * a * c;
 
         if (delta >= 0) {
-            double x1 = (-b + Math.sqrt(delta)) / (2 * a);
-            double x2 = (-b - Math.sqrt(delta)) / (2 * a);
-            if (x1 >= 0 && x1 <= 1 && x2 >= 0 && x2 <= 1 && x1 < x2) {
-                return x1;//MotionEquation(u1,v1,x1);
+            double t1 = (-b + Math.sqrt(delta)) / (2 * a);
+            double t2 = (-b - Math.sqrt(delta)) / (2 * a);
+            if (t1 >= 0 && t1 <= 1 && t2 >= 0 && t2 <= 1 && t1 < t2) {
+                return t1;//MotionEquation(u1,v1,t1);
             }
-            if (x1 >= 0 && x1 <= 1 && x2 >= 0 && x2 <= 1 && x1 > x2) {
-                return x2;//MotionEquation(u1,v1,x2);
+            if (t1 >= 0 && t1 <= 1 && t2 >= 0 && t2 <= 1 && t1 > t2) {
+                return t2;//MotionEquation(u1,v1,t2);
             }
-            if (x1 >= 0 && x1 <= 1 && !(x2 >= 0 && x2 <= 1)) {
-                return x1;//MotionEquation(u1,v1,x1);
+            if (t1 >= 0 && t1 <= 1 && !(t2 >= 0 && t2 <= 1)) {
+                return t1;//MotionEquation(u1,v1,t1);
             }
-            if (!(x1 >= 0 && x1 <= 1) && (x2 >= 0 && x2 <= 1)) {
-                return x2;//MotionEquation(u1,v1,x2);
+            if (!(t1 >= 0 && t1 <= 1) && (t2 >= 0 && t2 <= 1)) {
+                return t2;//MotionEquation(u1,v1,t2);
             }
 
         }
         return -1;
     }
-    public double CollisionDetect(Agent agent,Obstacle o , Vector2D v)
+    public double collisionDetect(Agent agent, Obstacle o , Vector2D v)
     {
-        return CollisionDetect(agent.getPos(),o.getPos(),Vector2D.add(agent.getPos(),v),
+        return collisionDetect(agent.getPos(),o.getPos(),Vector2D.add(agent.getPos(),v),
                 o.getPos(),ConfigManager.i().getAgentSize(),o.r);
     }
-    public Vector2D CollisionLocation(Agent agent,Vector2D v)
+    public Vector2D collisionLocation(Agent agent, Vector2D v)
     {
         Optional<Double> p = obstacles.stream().
-                map(obstacle -> CollisionDetect(agent, obstacle, v)).
+                map(obstacle -> collisionDetect(agent, obstacle, v)).
                 filter(aDouble -> aDouble >= 0 && aDouble <= 1)
                 .min(Double::compareTo);
         return p.map(aDouble -> MotionEquation(agent.getPos(), Vector2D.add(agent.getPos(), v), aDouble)).
@@ -160,11 +155,13 @@ public class Game extends GameData {
     }
     public Agent getAgent(int agent) {
 
-        return teams.stream().flatMap(team -> team.agents.stream()).filter(agent1 -> agent1.id == agent).findFirst().get();
+        return teams.stream().flatMap(team -> team.agents.stream()).filter(agent1 -> agent1.id == agent).
+                findFirst().get();
     }
 
     private boolean isNotInMap(Vector2D pos) {
-        return pos.getX() < 0 || pos.getY() < 0 || pos.getX() > ConfigManager.i().getMapWidth() || pos.getY() > ConfigManager.i().getMapHeight();
+        return pos.getX() < 0 || pos.getY() < 0 || pos.getX() > ConfigManager.i().getMapWidth() ||
+                pos.getY() > ConfigManager.i().getMapHeight();
     }
 
     public List<Bullet> getBullets() {

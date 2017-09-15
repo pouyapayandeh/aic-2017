@@ -15,7 +15,7 @@ public class Manager {
         {
             new JCommander(clientArgs,args);
             System.out.println(clientArgs.cmd);
-            Interpreter i = new Interpreter(clientArgs.cmd,clientArgs.host,clientArgs.port);
+            Interpreter i = new Interpreter(clientArgs.cmd,clientArgs.name,clientArgs.host,clientArgs.port);
             i.cycle();
         }catch (ParameterException e)
         {
