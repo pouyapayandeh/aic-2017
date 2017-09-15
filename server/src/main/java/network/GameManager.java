@@ -9,6 +9,7 @@ import game.command.Command;
 import game.command.MoveCommand;
 import game.command.RotateCommand;
 import game.command.ShootCommand;
+import game.logger.Logger;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 
@@ -33,6 +34,8 @@ public class GameManager
     List<WebSocket> sockets = new ArrayList<>();
     List<Boolean> headerFlags = new ArrayList<>();
     List<Command> commands = Collections.synchronizedList(new ArrayList<Command>());
+    Logger mainLogger ;
+    int players = 0;
     public GameManager(int port, String map, String logDir)
     {
         GsonBuilder builder = new GsonBuilder();
@@ -42,6 +45,7 @@ public class GameManager
         gameServer.setOnMessage(this::onMessage);
         gameServer.setOnConnect(this::onConnect);
         mapfile = Paths.get(map).toUri();
+        mainLogger = new Logger(logDir+"/game.json");
 
     }
 
@@ -60,13 +64,17 @@ public class GameManager
     }
     private void loop()
     {
-        while(true)
+        while(!isFinished())
         {
-            System.out.println(commands);
-            game.doTurn(commands);
-            commands.clear();
-            String msg = gson.toJson(game);
-            gameServer.broadcast(msg);
+            if(players > 1)
+            {
+                System.out.println(commands);
+                game.doTurn(commands);
+                commands.clear();
+                String msg = gson.toJson(game);
+                gameServer.broadcast(msg);
+                mainLogger.addStringLog(msg);
+            }
             try
             {
                 Thread.sleep(1000);
@@ -75,13 +83,21 @@ public class GameManager
                 e.printStackTrace();
             }
         }
+        mainLogger.finished();
     }
+
+    private boolean isFinished()
+    {
+        return game.getTotalTurns() < game.getTime();
+    }
+
     private void onMessage(WebSocket socket, String s)
     {
         if(isHeaderMsg(socket))
         {
             Header header = gson.fromJson(s,Header.class);
             setTeamName(header);
+            players ++ ;
         }else
         {
             commands.add(gson.fromJson(s,Command.class));

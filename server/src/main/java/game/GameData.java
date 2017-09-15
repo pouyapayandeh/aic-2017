@@ -47,6 +47,13 @@ public class GameData
         return width;
     }
 
+    public int getTime()
+    {
+        return time;
+    }
+
+
+
     public int getHeight()
     {
         return height;
