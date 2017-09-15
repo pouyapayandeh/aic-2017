@@ -10,7 +10,7 @@ public class ShootCommand implements  Command
     int agent;
     int team;
 
-    public ShootCommand(int agent, int team) {
+    public ShootCommand(int team,int agent) {
         this.agent = agent;
         this.team = team;
     }
